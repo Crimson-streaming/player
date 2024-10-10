@@ -1,0 +1,319 @@
+
+
+/* Style pour le message de sécurité */
+#security-message {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+    color: var(--text-color); /* Utilisation de la variable */
+    background-image: 
+    linear-gradient(165deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0) 35.71%),
+    linear-gradient(152deg, rgba(184, 27, 14, 0.29), rgba(244, 67, 54, 0.35) 70.71%),
+    linear-gradient(336deg, var(--purple), var(--purple) 80.71%);
+    z-index: 98;
+    box-sizing: border-box;
+    border-radius: 15px;
+}
+
+/* Style pour le titre */
+#security-message h2 {
+    font-size: 40px;
+    margin-bottom: 25px;
+    color: var(--text-color);
+    font-weight: 1000;
+}
+
+/* Animation pour rendre le bouton plus attractif */
+@keyframes buttonPulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(184, 27, 14, 0.5);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(184, 27, 14, 0.8);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 10px rgba(184, 27, 14, 0.5);
+    }
+}
+
+/* Style pour le bouton */
+#security-button {
+    font-size: 20px;
+    padding: 12px 24px;
+    background-color: var(--primary-red);
+    border: none;
+    border-radius: 999px;
+    cursor: pointer;
+    color: var(--text-color);
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+    animation: buttonPulse 3s infinite;
+}
+
+/* Couleur du bouton en état de chargement */
+#security-button.loading {
+    background-color: var(--light-grey);
+    cursor: not-allowed;
+    animation: none;
+}
+
+/* Couleur du bouton au survol */
+#security-button:hover:not(.loading) {
+    background-color: var(--dark-red);
+}
+
+/* Style pour les messages de sécurité */
+#p-security-message {
+    font-size: 15px;
+    line-height: 1.5;
+    font-weight: 300;
+    margin-bottom: 0px;
+}
+
+#p2-security-message {
+    color: #ff5934;
+    font-size: 15px;
+    line-height: 1.5;
+    font-weight: 500;
+    margin-top: -10px;
+}
+
+/* Style pour la barre de progression */
+.progress-container {
+    width: 90%;
+    max-width: 500px;
+    background-color: #000;
+    border-radius: 10px;
+    margin: 20px auto;
+}
+
+/* Animation dynamique de la barre de progression */
+@keyframes extravagant-progress {
+    0% {
+        width: 0;
+        background-color: var(--primary-red);
+        box-shadow: 0 0 10px rgba(184, 27, 14, 0.8);
+        transform: scaleX(1);
+    }
+    100% {
+        background-color: var(--progress-bar-color);
+        box-shadow: 0 0 30px rgba(255, 235, 59, 0.8);
+        transform: scaleX(1);
+    }
+}
+
+/* Style pour la barre de progression */
+.progress-bar {
+    height: 20px;
+    width: 0;
+    background-color: var(--primary-red);
+    border-radius: 10px;
+    animation: extravagant-progress 0s ease-in-out 1;
+    transition: width 0.5s ease-in-out;
+    box-shadow: 0 0 10px rgba(184, 27, 14, 0.8);
+}
+
+/* Style pour le pourcentage de progression */
+.progress-percentage {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--text-color);
+    margin-top: -15px;
+}
+
+/* Style pour le bouton "Visionner le film" */
+#view-movie-button {
+    font-size: 20px;
+    padding: 12px 24px;
+    background-color: var(--primary-red);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-color);
+    font-weight: bold;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+#view-movie-button:hover {
+    background-color: var(--dark-red);
+}
+
+/* Style pour le lecteur vidéo */
+#video-player {
+    display: none;
+    width: 90%;
+    max-width: 1000px;
+    margin: 20px auto;
+    background-color: #000;
+}
+
+/* Classe pour masquer des éléments */
+.hidden {
+    display: none;
+}
+
+/* Media Queries pour les petits écrans */
+@media (max-width: 768px) {
+    #security-message {
+        padding: 30px 10px;
+    }
+
+    #security-message h2 {
+        font-size: 29px;
+        margin-bottom: 38px;
+    }
+
+    #security-button {
+        font-size: 18px;
+        padding: 10px 20px;
+    }
+
+    .progress-container {
+        width: 90%;
+        max-width: 400px;
+    }
+
+    .progress-bar {
+        height: 15px;
+    }
+
+    #progress-percentage {
+        font-size: 16px;
+        margin-top: -16px;
+    }
+
+    #view-movie-button {
+        font-size: 18px;
+        padding: 10px 20px;
+    }
+}
+
+/* Media Queries pour les très petits écrans */
+@media (max-width: 480px) {
+    #security-message {
+        padding: 40px 10px;
+    }
+
+    #security-message h2 {
+        font-size: 23px;
+        margin-bottom: 17px;
+        margin-top: 17px;
+    }
+
+    #security-button {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+
+    .progress-container {
+        width: 90%;
+        max-width: 300px;
+    }
+
+    .progress-bar {
+        height: 10px;
+    }
+
+    #progress-percentage {
+        font-size: 14px;
+        margin-top: -16px;
+        color: var(--text-color);
+    }
+
+    #view-movie-button {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+}
+
+@media (max-width: 360px) {
+    #p-security-message {
+        font-size: 13.5px;
+        line-height: 1.5;
+        font-weight: 300;
+        margin-bottom: 0px;
+    }
+
+    #p2-security-message {
+        color: #ff4242;
+        font-size: 13.5px;
+        line-height: 1.5;
+        font-weight: 500;
+        margin-top: -10px;
+    }
+    
+    #security-message h2 {
+        font-size: 22px;
+        margin-bottom: 15px;
+    }
+}
+
+/* Style de base pour le bouton */
+.vibrating-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--purple);
+    color: var(--text-color);
+    padding: 6px 6px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14.5px;
+    transition: all 0.2s ease-in-out;
+}
+
+/* Survol du bouton */
+.vibrating-button:hover {
+    transform: scale(1.05);
+    background-color: var(--hover-color);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.4);
+}
+
+/* Effet de vibration */
+@keyframes vibrating {
+    0% {
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(-2px, -2px);
+    }
+    40% {
+        transform: translate(2px, 2px);
+    }
+    60% {
+        transform: translate(-2px, -2px);
+    }
+    80% {
+        transform: translate(2px, 2px);
+    }
+    100% {
+        transform: translate(0);
+    }
+}
+
+/* Application de l'effet de vibration */
+.vibrating-button:hover {
+    animation: vibrating 0.4s infinite;
+}
+
+/* Ajout de styles de focus pour les boutons */
+#security-button:focus,
+#view-movie-button:focus,
+.vibrating-button:focus {
+    outline: 2px dashed var(--light-grey);
+    outline-offset: 4px;
+}
