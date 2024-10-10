@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Player Page</title>
+    <title>Lecteur Vidéo</title>
 
     <!-- LOAD LOCAL CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -15,10 +15,9 @@
     <link rel="stylesheet" href="/css/responsive.css">
     <link rel="stylesheet" href="/css/player-crimson.css">
 
-    <!-- Plyr CSS and JS -->
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    <!-- Plyr CSS -->
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-
+    
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700,800&display=swap" rel="stylesheet">
 
@@ -35,8 +34,6 @@
         gtag('js', new Date());
         gtag('config', 'G-P12Y27NZFY');
     </script>
-
-    <meta name="8e1221ae1b607f5f7dae4e21897560c45012cc59" content="8e1221ae1b607f5f7dae4e21897560c45012cc59" />
 
     <!-- Custom CSS -->
     <style type="text/css">
@@ -72,6 +69,7 @@
             align-items: center;
             height: 100vh;
             position: relative; /* Permet de positionner l'image par rapport à ce conteneur */
+            width: 100%;
         }
 
         video {
@@ -82,6 +80,11 @@
         #video-error {
             display: none;
             color: red;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10; /* Pour s'assurer qu'il est au-dessus des autres éléments */
         }
 
         /* Logo styles */
@@ -102,19 +105,29 @@
         :fullscreen .logo-container {
             display: none; /* This hides the logo when in fullscreen */
         }
+
+        /* Media queries pour les mobiles */
+        @media (max-width: 600px) {
+            .video-container {
+                padding: 10px; /* Ajoute un peu d'espace autour sur mobile */
+            }
+
+            /* S'assurer que les contrôles de Plyr sont bien affichés */
+            .plyr__controls {
+                font-size: 0.9rem; /* Réduit la taille des contrôles sur mobile */
+            }
+
+            /* Ajustements supplémentaires si nécessaire */
+        }
     </style>
 </head>
 <body>
-
     <!-- Video Player Section -->
-    
-
+    <div class="video-container">
         <video id="player" aria-label="Lecteur vidéo" playsinline controls preload="auto" poster="https://xalaflix.eu/upload/images/lgkPzcOSnTvjeMnuFzozRO5HHw1.jpg">
             <source id="video-source" src="https://kangourou.online/films_720p/Moi-Moche-et-Mechant-4.mov" type="video/mp4" size="720">
-            <!-- La balise track a été supprimée -->
+            Votre navigateur ne prend pas en charge la balise vidéo.
         </video>
-
-       
         <div id="video-error">Erreur de lecture de la vidéo.</div>
     </div>
 
@@ -129,13 +142,15 @@
     <script src="/js/custom-main.js"></script>
     <script src="/js/jquery-eu-cookie-law-popup.js"></script>
 
+    <!-- Plyr JS -->
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+
     <!-- Custom Script for Video -->
     <script type="text/javascript">
         document.addEventListener('DOMContentLoaded', () => {
             const videoElement = document.getElementById('player');
             const videoSource = document.getElementById('video-source');
             const errorElement = document.getElementById('video-error');
-            const loadingIndicator = document.getElementById('loading-indicator');
 
             // Load the video
             videoSource.src = videoSource.src; // Réinitialiser la source pour commencer le chargement
@@ -143,11 +158,11 @@
 
             // Handle video loading indicators
             videoElement.addEventListener('loadstart', () => {
-                loadingIndicator.style.display = 'block';
+                console.log('Chargement de la vidéo...');
             });
 
             videoElement.addEventListener('canplaythrough', () => {
-                loadingIndicator.style.display = 'none';
+                console.log('Vidéo prête à jouer.');
             });
 
             // Handle video errors
