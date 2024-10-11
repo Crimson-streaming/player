@@ -155,14 +155,7 @@
              const videoSource = document.getElementById('video-source');
              const errorElement = document.getElementById('video-error');
 
-             // Fonction pour générer une clé unique basée sur l'URL de la vidéo
-             const generateStorageKey = (url) => `videoPlayerPosition_${url}`;
-
-             // Récupérer l'URL de la vidéo
-             const videoUrl = videoSource.src;
-             const storageKey = generateStorageKey(videoUrl);
-
-             // Précharger la vidéo après le chargement de la page
+            // Précharger la vidéo après le chargement de la page
              videoSource.src = videoSource.src;
              videoElement.load();
 
@@ -242,3 +235,4 @@
      </script>
 </body>
 </html>
+
