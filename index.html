@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lecteur Vidéo</title>
 
-    <!-- LOAD LOCAL CSS -->
+    <!-- CSS Imports -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
     <link rel="stylesheet" href="css/owl.carousel.min.css">
     <link rel="stylesheet" href="css/megamenu.css">
@@ -14,20 +14,16 @@
     <link rel="stylesheet" href="css/style-three.css" id="theme">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="css/player-crimson.css">
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
 
-    <!-- Plyr CSS -->
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700,800&display=swap" rel="stylesheet">
 
     <!-- SweetAlert2 -->
     <script src="/js/sweetalert2@11.js"></script>
-    
-    <!-- disable devtool -->
     <script disable-devtool-auto title="3" src='/js/disable-devtool.js'></script>
 
-    <!-- Google tag (gtag.js) -->
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P12Y27NZFY"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
@@ -39,31 +35,16 @@
     </script>
 
     <!-- Custom CSS -->
-    <style type="text/css">
-        body {
-            background-color: #0E0E0E;
-            color: #FFFFFF;
-            font-family: 'Poppins', sans-serif;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-            overflow: hidden; /* Masque la barre de défilement */
-        }
-
+    <style>
         /* Masquer la scrollbar sur les navigateurs basés sur WebKit */
         body::-webkit-scrollbar {
-            width: 0; /* Masquer la scrollbar */
-            background: transparent; /* Fond transparent */
+            width: 0;
+            background: transparent;
         }
 
         /* Cacher la scrollbar sur Firefox */
         html {
-            overflow: -moz-hidden-unscrollable; /* Pour Firefox */
+            overflow: -moz-hidden-unscrollable;
         }
 
         .video-container {
@@ -71,8 +52,9 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            position: relative; /* Permet de positionner l'image par rapport à ce conteneur */
+            position: relative;
             width: 100%;
+            min-height: 300px; /* Hauteur minimale pour éviter le rétrécissement */
         }
 
         video {
@@ -87,152 +69,166 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 10; /* Pour s'assurer qu'il est au-dessus des autres éléments */
+            z-index: 10;
         }
 
-        /* Logo styles */
-        .logo-container {
+        /* Loader Style */
+        #loading {
+            display: none;
             position: absolute;
-            top: 20px;  /* Adjust the value as needed */
-            left: 20px; /* Adjust the value as needed */
-            z-index: 100; /* Ensure it's above other elements */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            color: #ffffff;
         }
 
-        .logo {
-            max-width: 10vw; /* Set the maximum width of the logo to 10% of the viewport width */
-            height: auto; /* Keep the aspect ratio */
-            transition: opacity 0.3s; /* Add a transition for smooth visibility changes */
+        /* Ajuster la position des sous-titres */
+        .plyr__captions {
+            bottom: 12%;
         }
 
-        /* Hide the logo when video is in fullscreen mode */
-        :fullscreen .logo-container {
-            display: none; /* This hides the logo when in fullscreen */
+        .plyr__captions::cue {
+            background: rgba(0, 0, 0, 0.7);
+            color: #FFFFFF;
+            padding: 5px;
         }
 
         /* Media queries pour les mobiles */
         @media (max-width: 600px) {
             .video-container {
-                padding: 10px; /* Ajoute un peu d'espace autour sur mobile */
+                padding: 10px;
             }
 
-            /* S'assurer que les contrôles de Plyr sont bien affichés */
             .plyr__controls {
-                font-size: 0.9rem; /* Réduit la taille des contrôles sur mobile */
+                font-size: 0.9rem;
             }
-
-            /* Ajustements supplémentaires si nécessaire */
         }
     </style>
 </head>
 <body>
     <!-- Video Player Section -->
     <div class="video-container">
-        <video id="player" aria-label="Lecteur vidéo" playsinline controls preload="auto" poster="https://xalaflix.eu/upload/images/lgkPzcOSnTvjeMnuFzozRO5HHw1.jpg">
+        <div id="loading">Chargement...</div> <!-- Loader -->
+        <video id="player" aria-label="Lecteur vidéo" playsinline controls preload="metadata" poster="https://xalaflix.eu/upload/images/lgkPzcOSnTvjeMnuFzozRO5HHw1.jpg">
             <source id="video-source" src="https://kangourou.online/films_720p/All-Eyez-on-Me.mov" type="video/mp4" size="720">
+            <track kind="subtitles" label="Français" srclang="fr" src="subtitles.vtt" default>
             Votre navigateur ne prend pas en charge la balise vidéo.
         </video>
         <div id="video-error">Erreur de lecture de la vidéo.</div>
     </div>
 
-     <!-- External JS -->
-     <script src="js/jquery-3.3.1.min.js"></script>
-     <script src="js/jquery.easing.min.js"></script>
-     <script src="js/bootstrap.min.js"></script>
-     <script src="js/owl.carousel.min.js"></script>
-     <script src="js/jquery.nice-select.min.js"></script>
-     <script src="js/megamenu.js"></script>
-     <script src="js/splide.min.js"></script>
-     <script src="js/custom-main.js"></script>
-     <script src="js/jquery-eu-cookie-law-popup.js"></script>
- 
-     <!-- Plyr JS -->
-     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
- 
-     <!-- Custom Script for Video with Save/Resume Position -->
-     <script type="text/javascript">
-         document.addEventListener('DOMContentLoaded', () => {
-             const videoElement = document.getElementById('player');
-             const videoSource = document.getElementById('video-source');
-             const errorElement = document.getElementById('video-error');
+    <!-- JS Imports -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/jquery.easing.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/owl.carousel.min.js"></script>
+    <script src="js/jquery.nice-select.min.js"></script>
+    <script src="js/megamenu.js"></script>
+    <script src="js/splide.min.js"></script>
+    <script src="js/custom-main.js"></script>
+    <script src="js/jquery-eu-cookie-law-popup.js"></script>
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+
+    <!-- Custom Script for Video Controls and Functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const videoElement = document.getElementById('player');
+            const videoSource = document.getElementById('video-source');
+            const errorElement = document.getElementById('video-error');
+            const loadingElement = document.getElementById('loading');
 
             // Précharger la vidéo après le chargement de la page
-             videoSource.src = videoSource.src;
-             videoElement.load();
+            videoSource.src = videoSource.src;
+            videoElement.load();
 
-             
+            // Afficher l'indicateur de chargement lors de l'événement "waiting"
+            videoElement.addEventListener('waiting', () => {
+                loadingElement.style.display = 'block'; // Afficher le loader
+            });
 
-             if (videoElement) {
-                 // Gestion des erreurs vidéo
-                 videoElement.addEventListener('error', function () {
-                     videoElement.style.display = 'none';
-                     errorElement.style.display = 'block';
-                 });
-             }
+            // Masquer l'indicateur de chargement lorsque la vidéo est prête à jouer
+            videoElement.addEventListener('playing', () => {
+                loadingElement.style.display = 'none'; // Masquer le loader
+            });
 
-             // Plyr setup
-             const playerControls = window.innerWidth >= 600 ? 
-                 ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'pip', 'airplay', 'settings', 'fullscreen'] : 
-                 ['play-large', 'play', 'progress', 'current-time', 'pip', 'airplay', 'settings', 'fullscreen'];
+            // Gestion des erreurs vidéo
+            videoElement.addEventListener('error', () => {
+                videoElement.style.display = 'none';
+                errorElement.style.display = 'block';
+            });
 
-             const player = new Plyr('#player', {
-                 controls: playerControls,
-                 quality: {
-                     default: 720,
-                     options: [720],
-                     forced: true,
-                 },
-                 fullscreen: {
-                     enabled: true,
-                     fallback: true,
-                     iosNative: true,
-                 },
-                 storage: {
-                     enabled: true,
-                     key: 'plyr',
-                 },
-                 disableContextMenu: true,
-             });
+            // Initialisation de Plyr
+            const playerControls = window.innerWidth >= 600 ? 
+                ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'pip', 'airplay', 'settings', 'fullscreen'] : 
+                ['play-large', 'play', 'progress', 'current-time', 'pip', 'airplay', 'settings', 'fullscreen'];
 
-           
+            const player = new Plyr('#player', {
+                controls: playerControls,
+                quality: {
+                    default: 720,
+                    options: [720],
+                    forced: true,
+                },
+                fullscreen: {
+                    enabled: true,
+                    fallback: true,
+                    iosNative: true,
+                },
+                storage: {
+                    enabled: true,
+                    key: 'plyr',
+                },
+                disableContextMenu: true,
+                i18n: {
+                    play: 'Lire',
+                    pause: 'Pause',
+                    rewind: 'Reculer',
+                    fastForward: 'Avancer',
+                    seeking: 'Recherche...',
+                    settings: 'Paramètres',
+                    quality: 'Qualité',
+                    speed: 'Vitesse',
+                    captions: 'Sous-titres',
+                    toggleMute: 'Activer/Désactiver le son',
+                    toggleFullscreen: 'Activer/Désactiver le plein écran',
+                    disableCaptions: 'Désactiver les sous-titres',
+                    enableCaptions: 'Activer les sous-titres',
+                },
+            });
 
-             // Gestion des clics pour charger et lire la vidéo
-             videoElement.addEventListener('click', () => {
-                 const playPromise = videoElement.play();
-                 if (playPromise !== undefined) {
-                     playPromise.then(() => {
-                         console.log('Lecture automatique réussie');
-                     }).catch(error => {
-                         console.log('Lecture automatique empêchée', error);
-                     });
-                 }
-             });
+            // Gestion des clics pour charger et lire la vidéo
+            videoElement.addEventListener('click', () => {
+                const playPromise = videoElement.play();
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log('Lecture automatique réussie');
+                    }).catch(error => {
+                        console.log('Lecture automatique empêchée', error);
+                    });
+                }
+            });
 
-             // Raccourcis clavier
-             document.addEventListener('keydown', (event) => {
-                 switch (event.code) {
-                     case 'Space': // Barre d'espace pour jouer/pause
-                         event.preventDefault(); // Empêche le défilement de la page
-                         if (videoElement.paused) {
-                             videoElement.play();
-                         } else {
-                             videoElement.pause();
-                         }
-                         break;
-                     case 'KeyF': // 'F' pour plein écran
-                         if (videoElement.requestFullscreen) {
-                             videoElement.requestFullscreen();
-                         }
-                         break;
-                     // Ajoutez d'autres raccourcis ici si nécessaire
-                 }
-             });
-         });
+            // Raccourcis clavier
+            document.addEventListener('keydown', (event) => {
+                switch (event.code) {
+                    case 'Space': // Barre d'espace pour jouer/pause
+                        event.preventDefault();
+                        videoElement.paused ? videoElement.play() : videoElement.pause();
+                        break;
+                    case 'KeyF': // 'F' pour plein écran
+                        if (videoElement.requestFullscreen) {
+                            videoElement.requestFullscreen();
+                        }
+                        break;
+                }
+            });
+        });
 
-         // Disable right-click
-         $(document).bind("contextmenu", function () {
-             return false;
-         });
-     </script>
+        // Désactiver le clic droit
+        $(document).bind("contextmenu", function () {
+            return false;
+        });
+    </script>
 </body>
 </html>
-
