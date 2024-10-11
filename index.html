@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lecteur Vidé</title>
+    <title>Lecteur Vidéo</title>
 
     <!-- LOAD LOCAL CSS -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -23,6 +23,9 @@
 
     <!-- SweetAlert2 -->
     <script src="/js/sweetalert2@11.js"></script>
+    
+    <!-- disable devtool -->
+    <script disable-devtool-auto title="3" src='/js/disable-devtool.js'></script>
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P12Y27NZFY"></script>
@@ -125,122 +128,140 @@
     <!-- Video Player Section -->
     <div class="video-container">
         <video id="player" aria-label="Lecteur vidéo" playsinline controls preload="auto" poster="https://xalaflix.eu/upload/images/lgkPzcOSnTvjeMnuFzozRO5HHw1.jpg">
-            <source id="video-source" src="https://kangourou.online/films_720p/Moi-Moche-et-Mechant-4.mov" type="video/mp4" size="720">
+            <source id="video-source" src="https://kangourou.online/films_720p/All-Eyez-on-Me.mov" type="video/mp4" size="720">
             Votre navigateur ne prend pas en charge la balise vidéo.
         </video>
         <div id="video-error">Erreur de lecture de la vidéo.</div>
     </div>
 
-    <!-- External JS -->
-    <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/jquery.easing.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/jquery.nice-select.min.js"></script>
-    <script src="js/megamenu.js"></script>
-    <script src="js/splide.min.js"></script>
-    <script src="js/custom-main.js"></script>
-    <script src="js/jquery-eu-cookie-law-popup.js"></script>
+     <!-- External JS -->
+     <script src="js/jquery-3.3.1.min.js"></script>
+     <script src="js/jquery.easing.min.js"></script>
+     <script src="js/bootstrap.min.js"></script>
+     <script src="js/owl.carousel.min.js"></script>
+     <script src="js/jquery.nice-select.min.js"></script>
+     <script src="js/megamenu.js"></script>
+     <script src="js/splide.min.js"></script>
+     <script src="js/custom-main.js"></script>
+     <script src="js/jquery-eu-cookie-law-popup.js"></script>
+ 
+     <!-- Plyr JS -->
+     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+ 
+     <!-- Custom Script for Video with Save/Resume Position -->
+     <script type="text/javascript">
+         document.addEventListener('DOMContentLoaded', () => {
+             const videoElement = document.getElementById('player');
+             const videoSource = document.getElementById('video-source');
+             const errorElement = document.getElementById('video-error');
 
-    <!-- Plyr JS -->
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+             // Fonction pour générer une clé unique basée sur l'URL de la vidéo
+             const generateStorageKey = (url) => `videoPlayerPosition_${url}`;
 
-    <!-- Custom Script for Video -->
-    <script type="text/javascript">
-        document.addEventListener('DOMContentLoaded', () => {
-            const videoElement = document.getElementById('player');
-            const videoSource = document.getElementById('video-source');
-            const errorElement = document.getElementById('video-error');
+             // Récupérer l'URL de la vidéo
+             const videoUrl = videoSource.src;
+             const storageKey = generateStorageKey(videoUrl);
 
-            // Load the video
-            videoSource.src = videoSource.src; // Réinitialiser la source pour commencer le chargement
-            videoElement.load(); // Charger la vidéo
+             // Précharger la vidéo après le chargement de la page
+             videoSource.src = videoSource.src;
+             videoElement.load();
 
-            // Handle video loading indicators
-            videoElement.addEventListener('loadstart', () => {
-                console.log('Chargement de la vidéo...');
-            });
+             // Récupérer la position de lecture enregistrée pour cette vidéo
+             const savedPosition = localStorage.getItem(storageKey);
+             if (savedPosition) {
+                 videoElement.currentTime = parseFloat(savedPosition);
+                 console.log(`Reprise de la lecture à la position : ${savedPosition} secondes pour la vidéo ${videoUrl}.`);
+             }
 
-            videoElement.addEventListener('canplaythrough', () => {
-                console.log('Vidéo prête à jouer.');
-            });
+             if (videoElement) {
+                 // Gestion des erreurs vidéo
+                 videoElement.addEventListener('error', function () {
+                     videoElement.style.display = 'none';
+                     errorElement.style.display = 'block';
+                 });
+             }
 
-            // Handle video errors
-            videoElement.addEventListener('error', function () {
-                videoElement.style.display = 'none';
-                errorElement.style.display = 'block';
-            });
+             // Plyr setup
+             const playerControls = window.innerWidth >= 600 ? 
+                 ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'pip', 'airplay', 'settings', 'fullscreen'] : 
+                 ['play-large', 'play', 'progress', 'current-time', 'pip', 'airplay', 'settings', 'fullscreen'];
 
-            // Plyr setup
-            const playerControls = window.innerWidth >= 600 ? 
-                ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'pip', 'airplay', 'settings', 'fullscreen'] : 
-                ['play-large', 'play', 'progress', 'current-time', 'pip', 'airplay', 'settings', 'fullscreen'];
+             const player = new Plyr('#player', {
+                 controls: playerControls,
+                 quality: {
+                     default: 720,
+                     options: [720],
+                     forced: true,
+                 },
+                 fullscreen: {
+                     enabled: true,
+                     fallback: true,
+                     iosNative: true,
+                 },
+                 storage: {
+                     enabled: true,
+                     key: 'plyr',
+                 },
+                 disableContextMenu: true,
+             });
 
-            const player = new Plyr('#player', {
-                controls: playerControls,
-                quality: {
-                    default: 720,
-                    options: [720],
-                    forced: true,
-                },
-                fullscreen: {
-                    enabled: true,
-                    fallback: true,
-                    iosNative: true,
-                },
-                storage: {
-                    enabled: true,
-                    key: 'plyr',
-                },
-                disableContextMenu: true,
-            });
+             // Sauvegarder la position de lecture à chaque mise en pause ou à la fermeture de la page
+             const savePosition = () => {
+                 const currentTime = videoElement.currentTime;
+                 localStorage.setItem(storageKey, currentTime);
+                 console.log(`Position de lecture sauvegardée : ${currentTime} secondes pour la vidéo ${videoUrl}.`);
+             };
 
-            // Récupération et restauration du temps de lecture
-            const savedTime = localStorage.getItem('videoCurrentTime');
-            if (savedTime) {
-                videoElement.currentTime = parseFloat(savedTime);
-            }
+             // Sauvegarder la position quand la vidéo est mise en pause
+             videoElement.addEventListener('pause', savePosition);
 
-            // Sauvegarde du temps de lecture dans localStorage à chaque mise à jour
-            videoElement.addEventListener('timeupdate', () => {
-                localStorage.setItem('videoCurrentTime', videoElement.currentTime);
-            });
+             // Sauvegarder la position lorsque l'utilisateur quitte la page
+             window.addEventListener('beforeunload', savePosition);
 
-            // Nettoyage de la sauvegarde lorsque la vidéo est terminée
-            videoElement.addEventListener('ended', () => {
-                localStorage.removeItem('videoCurrentTime');
-            });
+             // Supprimer la position si la vidéo est terminée
+             videoElement.addEventListener('ended', () => {
+                 localStorage.removeItem(storageKey);
+                 console.log('Lecture terminée, position supprimée pour la vidéo ' + videoUrl);
+             });
 
-            // Raccourcis clavier
-            document.addEventListener('keydown', (event) => {
-                switch (event.code) {
-                    case 'Space': // Barre d'espace pour jouer/pause
-                        event.preventDefault(); // Empêche le défilement de la page
-                        if (videoElement.paused) {
-                            videoElement.play();
-                        } else {
-                            videoElement.pause();
-                        }
-                        break;
-                    case 'KeyF': // 'F' pour passer en plein écran
-                        if (videoElement.requestFullscreen) {
-                            videoElement.requestFullscreen();
-                        } else if (videoElement.mozRequestFullScreen) {
-                            videoElement.mozRequestFullScreen();
-                        } else if (videoElement.webkitRequestFullscreen) {
-                            videoElement.webkitRequestFullscreen();
-                        } else if (videoElement.msRequestFullscreen) {
-                            videoElement.msRequestFullscreen();
-                        }
-                        break;
-                }
-            });
-        });
+             // Gestion des clics pour charger et lire la vidéo
+             videoElement.addEventListener('click', () => {
+                 const playPromise = videoElement.play();
+                 if (playPromise !== undefined) {
+                     playPromise.then(() => {
+                         console.log('Lecture automatique réussie');
+                     }).catch(error => {
+                         console.log('Lecture automatique empêchée', error);
+                     });
+                 }
+             });
 
-        // Disable right-click
-        $(document).bind("contextmenu", function () {
-            return false;
-        });
-    </script>
+             // Raccourcis clavier
+             document.addEventListener('keydown', (event) => {
+                 switch (event.code) {
+                     case 'Space': // Barre d'espace pour jouer/pause
+                         event.preventDefault(); // Empêche le défilement de la page
+                         if (videoElement.paused) {
+                             videoElement.play();
+                         } else {
+                             videoElement.pause();
+                         }
+                         break;
+                     case 'KeyF': // 'F' pour plein écran
+                         if (videoElement.requestFullscreen) {
+                             videoElement.requestFullscreen();
+                         }
+                         break;
+                     // Ajoutez d'autres raccourcis ici si nécessaire
+                 }
+             });
+         });
+
+         // Disable right-click
+         $(document).bind("contextmenu", function () {
+             return false;
+         });
+     </script>
 </body>
 </html>
+
