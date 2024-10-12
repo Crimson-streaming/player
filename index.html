@@ -19,10 +19,10 @@
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-P12Y27NZFY"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-P12Y27NZFY');
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+        gtag('config', 'G-P12Y27NZFY');
     </script>
 
     <!-- Google Fonts -->
@@ -35,7 +35,7 @@
             background: transparent;
         }
         html {
-            overflow: -moz-hidden-unscrollable;
+            overflow: hidden;
         }
         .video-container {
             display: flex;
@@ -93,7 +93,7 @@
 <body>
     <!-- Video Player Section -->
     <div class="video-container">
-        <video id="player" aria-label="Lecteur vidéo" playsinline controls preload="metadata" poster="https://xalaflix.eu/upload/images/lgkPzcOSnTvjeMnuFzozRO5HHw1.jpg">
+        <video id="player" aria-label="Lecteur vidéo" playsinline controls preload="metadata" poster="https://xalaflix.eu/upload/images/bmFSbK6HMDz5moHjIkf3BatBdca.jpg">
             <source id="video-source" src="https://kangourou.online/films_720p/Nowhere.mov" type="video/mp4" size="720">
             <track kind="subtitles" label="Français" srclang="fr" src="subtitles.srt" default>
             Votre navigateur ne prend pas en charge la balise vidéo.
@@ -105,8 +105,6 @@
     <script src="js/jquery-3.3.1.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-
-    <!-- Ajouter le fichier JavaScript de FWDEVPlayer -->
     <script src="js/FWDEVPlayer.js"></script>
 
     <!-- Combined FWDEVPlayer and Plyr Script -->
@@ -118,11 +116,9 @@
                 parentId: "player",
                 mainFolderPath: "https://xalaflix.eu/site_assets/player/content",
                 skinPath: "classic_skin_dark",
-                videoSource: [
-                    {source: "https://kangourou.online/films_720p/Nowhere.mov", label: "720p", isLive: "no"}
-                ],
-                posterPath: "https://xalaflix.eu/upload/images/bmFSbK6HMDz5moHjIkf3BatBdca.jpg",
-                showErrorInfo:"yes",
+                videoSource: [{ source: "https://kangourou.online/films_720p/Nowhere.mov", label: "720p", isLive: "no" }],
+                posterPath:"https://xalaflix.eu/upload/images/bmFSbK6HMDz5moHjIkf3BatBdca.jpg",
+					 showErrorInfo:"yes",
 					 fillEntireScreenWithPoster:"no",
 					 disableDoubleClickFullscreen:"no",
 					 useChromeless:"no",
@@ -267,111 +263,93 @@
 					 contextMenuItemNormalColor:"#bdbdbd",
 					 contextMenuItemSelectedColor:"#FFFFFF",
 					 contextMenuItemDisabledColor:"#333",
-					   
             });
         });
 
         // Plyr setup
         document.addEventListener('DOMContentLoaded', () => {
             const videoElement = document.getElementById('player');
-            const loadingElement = document.getElementById('loading');
+            const videoSource = document.getElementById('video-source');
             const errorElement = document.getElementById('video-error');
+            const loadingElement = document.getElementById('loading');
 
-            videoElement.addEventListener('waiting', () => {
-                loadingElement.style.display = 'block'; 
+            // Show loading indicator
+            loadingElement.style.display = 'block';
+
+            // Start preloading the video after the page loads
+            videoSource.src = videoSource.src; // Reset the source to start loading
+            videoElement.load(); // Load the video
+
+            videoElement.addEventListener('canplay', function() {
+                loadingElement.style.display = 'none'; // Hide loading indicator
+                videoElement.style.display = 'block'; // Show video element
             });
 
-            videoElement.addEventListener('playing', () => {
-                loadingElement.style.display = 'none'; 
-            });
-
-            videoElement.addEventListener('error', () => {
-                videoElement.style.display = 'none';
-                errorElement.style.display = 'block';
-            });
-
-            // Initialiser les contrôles de Plyr
-            const playerControls = window.innerWidth >= 600 ? 
-                ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'] : 
-                ['play-large', 'play', 'progress', 'current-time', 'settings', 'fullscreen'];
-
-            const player = new Plyr('#player', {
-                controls: playerControls,
-                quality: {
-                    default: 720,
-                    options: [720],
-                    forced: true,
-                },
-                fullscreen: {
-                    enabled: true,
-                    fallback: true,
-                    iosNative: true,
-                },
-                storage: {
-                    enabled: true,
-                    key: 'plyr',
-                },
-                disableContextMenu: true,
-                i18n: {
-                    restart: 'Recommencer',
-                    rewind: 'Revenir de {seektime}s',
-                    play: 'Lecture',
-                    pause: 'Pause',
-                    fastForward: 'Avancer de {seektime}s',
-                    seek: 'Chercher',
-                    seekLabel: '{currentTime} de {duration}',
-                    played: 'Joué',
-                    buffered: 'En cache',
-                    currentTime: 'Temps actuel',
-                    duration: 'Durée',
-                    volume: 'Volume',
-                    mute: 'Muet',
-                    unmute: 'Démuet',
-                    enableCaptions: 'Activer les sous-titres',
-                    disableCaptions: 'Désactiver les sous-titres',
-                    download: 'Télécharger',
-                    enterFullscreen: 'Plein écran',
-                    exitFullscreen: 'Quitter le plein écran',
-                    frameTitle: 'Lecteur pour {title}',
-                    captions: 'Sous-titres',
-                    settings: 'Réglages',
-                    pip: 'Picture-in-Picture',
-                    menuBack: 'Retour au menu précédent',
-                    speed: 'Vitesse',
-                    normal: 'Normal',
-                    quality: 'Qualité',
-                    loop: 'Boucle',
-                    start: 'Début',
-                    end: 'Fin',
-                    all: 'Tous',
-                    reset: 'Réinitialiser',
-                    disabled: 'Désactivé',
-                    enabled: 'Activé',
-                    advertisement: 'Publicité',
-                },
-            });
-
-            // Gérer les raccourcis clavier pour Plyr
-            document.addEventListener('keydown', (event) => {
-                switch (event.code) {
-                    case 'Space': 
-                        event.preventDefault();
-                        videoElement.paused ? videoElement.play() : videoElement.pause();
-                        break;
-                    case 'KeyF': 
-                        if (videoElement.requestFullscreen) {
-                            videoElement.requestFullscreen();
-                        }
-                        break;
-                }
+            videoElement.addEventListener('error', function() {
+                loadingElement.style.display = 'none'; // Hide loading indicator
+                videoElement.style.display = 'none'; // Hide video element
+                errorElement.style.display = 'block'; // Show error message
             });
         });
 
-        // Désactiver le clic droit
-        $(document).bind("contextmenu", function () {
-            return false;
+        // Initialize Plyr
+        const playerControls = ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'captions', 'pip', 'airplay', 'settings', 'fullscreen', 'cast'];
+        const player = new Plyr('#player', {
+            controls: playerControls,
+            quality: {
+                default: 720,
+                options: [720],
+                forced: true,
+            },
+            qualityBadge: {
+                2160: '4K',
+                1440: 'ULTRA HD',
+                1080: 'FULL HD',
+                720: 'HD',
+                480: 'SD',
+                360: 'SD',
+            },
+            playsinline: true,
+            keyboard: { focused: true, global: true },
+            fullscreen: { enabled: true, fallback: true, iosNative: true },
+            disableContextMenu: true,
+            i18n: {
+                restart: 'Recommencer',
+            rewind: 'Revenir de {seektime}s',
+            play: 'Play',
+            pause: 'Pause',
+            fastForward: 'Passer {seektime}s',
+            seek: 'Rechercher',
+            seekLabel: '{currentTime} de {duration}',
+            played: 'Lancé',
+            buffered: 'Buffered',
+            currentTime: 'Temps actuel',
+            duration: 'Durée',
+            volume: 'Volume',
+            mute: 'Silence',
+            unmute: 'Son activé',
+            enableCaptions: 'Activer les sous-titres',
+            disableCaptions: 'Désactiver les sous-titres',
+            download: 'Télécharger',
+            enterFullscreen: 'Plein écran',
+            exitFullscreen: 'Sortir du plein écran',
+            frameTitle: 'Lecteur pour {title}',
+            captions: 'Sous-titres',
+            settings: 'Réglages',
+            pip: 'Picture-In-Picture',
+            menuBack: 'Retour au menu précédent',
+            speed: 'Vitesse',
+            normal: 'Normal',
+            quality: 'Qualité',
+            loop: 'Boucle',
+            start: 'Début',
+            end: 'Fin',
+            all: 'Tous',
+            reset: 'Réinitialiser',
+            disabled: 'Désactivé',
+            enabled: 'Activé',
+            },
         });
     </script>
 </body>
 </html>
-
