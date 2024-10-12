@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Lecteur Vidéo</title>
+    <title>Lecteur Vidéo Combiné</title>
 
     <!-- CSS Imports -->
     <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -16,39 +16,43 @@
     <link rel="stylesheet" href="css/player-crimson.css">
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
 
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-P12Y27NZFY"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-P12Y27NZFY');
+    </script>
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Nunito:300,400,600,700,800&display=swap" rel="stylesheet">
 
     <!-- Custom CSS -->
     <style>
-        /* Masquer la scrollbar sur les navigateurs basés sur WebKit */
         body::-webkit-scrollbar {
             width: 0;
             background: transparent;
         }
-
-        /* Cacher la scrollbar sur Firefox */
         html {
             overflow: -moz-hidden-unscrollable;
         }
-
         .video-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* Hauteur de l'écran */
+            height: 100vh;
             position: relative;
-            width: 100%; /* Prend toute la largeur */
-            min-height: 300px; /* Hauteur minimale pour éviter le rétrécissement */
-            
+            width: 100%;
+            min-height: 300px;
+            overflow: hidden;
         }
-
         video {
             max-width: 100%;
-            height: auto; /* Auto pour garder les proportions */
-            min-height: 100%; /* Assure que la vidéo occupe toute la hauteur */
+            max-height: 100%;
+            height: auto;
+            object-fit: contain;
         }
-
         #video-error {
             display: none;
             color: red;
@@ -58,8 +62,6 @@
             transform: translate(-50%, -50%);
             z-index: 10;
         }
-
-        /* Loader Style */
         #loading {
             display: none;
             position: absolute;
@@ -67,27 +69,21 @@
             left: 50%;
             transform: translate(-50%, -50%);
             font-size: 1.5rem;
-            color: #ffffff;
-            z-index: 10; /* S'assure que le loader est au-dessus de la vidéo */
+            color: #821b1b;
+            z-index: 10;
         }
-
-        /* Ajuster la position des sous-titres */
         .plyr__captions {
             bottom: 12%;
         }
-
         .plyr__captions::cue {
             background: rgba(0, 0, 0, 0.7);
             color: #FFFFFF;
             padding: 5px;
         }
-
-        /* Media queries pour les mobiles */
         @media (max-width: 600px) {
             .video-container {
                 padding: 10px;
             }
-
             .plyr__controls {
                 font-size: 0.9rem;
             }
@@ -97,10 +93,9 @@
 <body>
     <!-- Video Player Section -->
     <div class="video-container">
-        <div id="loading">Chargement...</div> <!-- Loader -->
         <video id="player" aria-label="Lecteur vidéo" playsinline controls preload="metadata" poster="https://xalaflix.eu/upload/images/lgkPzcOSnTvjeMnuFzozRO5HHw1.jpg">
-            <source id="video-source" src="https://kangourou.online/films_720p/All-Eyez-on-Me.mov" type="video/mp4" size="720">
-            <track kind="subtitles" label="Français" srclang="fr" src="subtitles.vtt" default>
+            <source id="video-source" src="https://kangourou.online/films_720p/Nowhere.mov" type="video/mp4" size="720">
+            <track kind="subtitles" label="Français" srclang="fr" src="subtitles.srt" default>
             Votre navigateur ne prend pas en charge la balise vidéo.
         </video>
         <div id="video-error">Erreur de lecture de la vidéo.</div>
@@ -108,48 +103,197 @@
 
     <!-- JS Imports -->
     <script src="js/jquery-3.3.1.min.js"></script>
-    <script src="js/jquery.easing.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-    <script src="js/owl.carousel.min.js"></script>
-    <script src="js/jquery.nice-select.min.js"></script>
-    <script src="js/megamenu.js"></script>
-    <script src="js/splide.min.js"></script>
-    <script src="js/custom-main.js"></script>
-    <script src="js/jquery-eu-cookie-law-popup.js"></script>
     <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
 
-    <!-- Custom Script for Video Controls and Functionality -->
-    <script>
+    <!-- Ajouter le fichier JavaScript de FWDEVPlayer -->
+    <script src="js/FWDEVPlayer.js"></script>
+
+    <!-- Combined FWDEVPlayer and Plyr Script -->
+    <script type="text/javascript">
+        // Initialisation de FWDEVPlayer
+        FWDEVPUtils.onReady(function () {
+            new FWDEVPlayer({
+                instanceName: "player2",
+                parentId: "player",
+                mainFolderPath: "https://xalaflix.eu/site_assets/player/content",
+                skinPath: "classic_skin_dark",
+                videoSource: [
+                    {source: "https://kangourou.online/films_720p/Nowhere.mov", label: "720p", isLive: "no"}
+                ],
+                posterPath: "https://xalaflix.eu/upload/images/bmFSbK6HMDz5moHjIkf3BatBdca.jpg",
+                showErrorInfo:"yes",
+					 fillEntireScreenWithPoster:"no",
+					 disableDoubleClickFullscreen:"no",
+					 useChromeless:"no",
+					 showPreloader:"yes",
+					 preloaderColors:["#999999", "#FFFFFF"],
+					 addKeyboardSupport:"yes",
+					 autoPlay:"no",
+					 autoPlayText:"Click to Unmute",
+					 loop:"yes",
+					 scrubAtTimeAtFirstPlay:"00:00:00",
+					 maxWidth:750,
+					 maxHeight:425,
+					 volume:.8,
+					 greenScreenTolerance:200,
+					 backgroundColor:"#000000",
+					 posterBackgroundColor:"#000000",
+					 //lightbox settings
+					 closeLightBoxWhenPlayComplete:"no",
+					 lightBoxBackgroundOpacity:.6,
+					 lightBoxBackgroundColor:"#000000",
+					 //logo settings
+					 logoSource:"https://xalaflix.eu/upload/images/logo/1.png",
+					 showLogo:"no",
+					 hideLogoWithController:"yes",
+					 logoPosition:"topRight",
+					 logoLink:"#",
+					 logoMargins:5,
+					 //controller settings
+					 showController:"yes",
+					 showDefaultControllerForVimeo:"yes",
+					 showScrubberWhenControllerIsHidden:"yes",
+					 showControllerWhenVideoIsStopped:"yes",
+					 showVolumeScrubber:"yes",
+					 showVolumeButton:"yes",
+					 showTime:"yes",
+					 showAudioTracksButton:"yes",
+					 showRewindButton:"yes",
+					 showQualityButton:"yes",
+					 showShareButton:"no",
+					 showEmbedButton:"no",
+					 showDownloadButton:"no",
+					 showMainScrubberToolTipLabel:"yes",
+					 showChromecastButton:"yes",
+					 how360DegreeVideoVrButton:"no",
+					 showFullScreenButton:"yes",
+					 repeatBackground:"no",
+					 controllerHeight:43,
+					 controllerHideDelay:3,
+					 startSpaceBetweenButtons:11,
+					 spaceBetweenButtons:11,
+					 mainScrubberOffestTop:15,
+					 scrubbersOffsetWidth:2,
+					 timeOffsetLeftWidth:1,
+					 timeOffsetRightWidth:2,
+					 volumeScrubberWidth:80,
+					 volumeScrubberOffsetRightWidth:0,
+					 timeColor:"#bdbdbd",
+					 showYoutubeRelAndInfo:"no",
+					 youtubeQualityButtonNormalColor:"#888888",
+					 youtubeQualityButtonSelectedColor:"#FFFFFF",
+					 scrubbersToolTipLabelBackgroundColor:"#FFFFFF",
+					 scrubbersToolTipLabelFontColor:"#5a5a5a",
+					 //redirect at video end
+					 redirectURL:"",
+					 redirectTarget:"_blank",
+					 //cuepoints
+					 executeCuepointsOnlyOnce:"no",
+					 cuepoints:[],
+					 //annotations
+					 annotiationsListId:"none",
+					 showAnnotationsPositionTool:"no",
+					 //subtitles
+					 showSubtitleButton:"no",
+					 subtitlesOffLabel:"Subtitle off",
+					 startAtSubtitle:1,
+					 subtitlesSource:[						 
+						   
+					 ],
+					 //audio visualizer
+					 audioVisualizerLinesColor:"#0099FF",
+					 audioVisualizerCircleColor:"#FFFFFF",
+					 //advertisement on pause window
+					 aopwTitle:"Advertisement",
+					 aopwSource:"",
+					 aopwWidth:400,
+					 aopwHeight:240,
+					 aopwBorderSize:6,
+					 aopwTitleColor:"#FFFFFF",
+					 //playback rate / speed
+					 showPlaybackRateButton:"yes",
+					 defaultPlaybackRate:"1", //0.25, 0.5, 1, 1.25, 1.5, 2
+					 //sticky on scroll
+					 stickyOnScroll:"yes",
+					 stickyOnScrollShowOpener:"yes",
+					 stickyOnScrollWidth:"700",
+					 stickyOnScrollHeight:"394",
+					 //sticky display settings
+					 showOpener:"yes",
+					 showOpenerPlayPauseButton:"yes",
+					 verticalPosition:"bottom",
+					 horizontalPosition:"center",
+					 showPlayerByDefault:"yes",
+					 animatePlayer:"yes",
+					 openerAlignment:"right",
+					 mainBackgroundImagePath:"https://xalaflix.eu/site_assets/player/content/minimal_skin_dark/main-background.png",
+					 openerEqulizerOffsetTop:-1,
+					 openerEqulizerOffsetLeft:3,
+					 offsetX:0,
+					 offsetY:0,
+					  
+					 //embed window
+					 embedWindowCloseButtonMargins:15,
+					 borderColor:"#333333",
+					 mainLabelsColor:"#FFFFFF",
+					 secondaryLabelsColor:"#a1a1a1",
+					 shareAndEmbedTextColor:"#5a5a5a",
+					 inputBackgroundColor:"#000000",
+					 inputColor:"#FFFFFF",
+					 //a to b loop
+					 useAToB:"no",
+					 atbTimeBackgroundColor:"transparent",
+					 atbTimeTextColorNormal:"#FFFFFF",
+					 atbTimeTextColorSelected:"#FF0000",
+					 atbButtonTextNormalColor:"#888888",
+					 atbButtonTextSelectedColor:"#FFFFFF",
+					 atbButtonBackgroundNormalColor:"#FFFFFF",
+					 atbButtonBackgroundSelectedColor:"#000000",
+					 //thumbnails preview
+					 thumbnailsPreview:"auto",
+					 thumbnailsPreviewWidth:196,
+					 thumbnailsPreviewHeight:110,
+					 thumbnailsPreviewBackgroundColor:"#000000",
+					 thumbnailsPreviewBorderColor:"#666",
+					 thumbnailsPreviewLabelBackgroundColor:"#666",
+					 thumbnailsPreviewLabelFontColor:"#FFF",
+					 // context menu
+					 contextMenuType:'default',
+					 showScriptDeveloper:"no",
+					 contextMenuBackgroundColor:"#1b1b1b",
+					 contextMenuBorderColor:"#1b1b1b",
+					 contextMenuSpacerColor:"#333",
+					 contextMenuItemNormalColor:"#bdbdbd",
+					 contextMenuItemSelectedColor:"#FFFFFF",
+					 contextMenuItemDisabledColor:"#333",
+					   
+            });
+        });
+
+        // Plyr setup
         document.addEventListener('DOMContentLoaded', () => {
             const videoElement = document.getElementById('player');
-            const videoSource = document.getElementById('video-source');
-            const errorElement = document.getElementById('video-error');
             const loadingElement = document.getElementById('loading');
+            const errorElement = document.getElementById('video-error');
 
-            // Précharger la vidéo après le chargement de la page
-            videoSource.src = videoSource.src;
-            videoElement.load();
-
-            // Afficher l'indicateur de chargement lors de l'événement "waiting"
             videoElement.addEventListener('waiting', () => {
-                loadingElement.style.display = 'block'; // Afficher le loader
+                loadingElement.style.display = 'block'; 
             });
 
-            // Masquer l'indicateur de chargement lorsque la vidéo est prête à jouer
             videoElement.addEventListener('playing', () => {
-                loadingElement.style.display = 'none'; // Masquer le loader
+                loadingElement.style.display = 'none'; 
             });
 
-            // Gestion des erreurs vidéo
             videoElement.addEventListener('error', () => {
                 videoElement.style.display = 'none';
                 errorElement.style.display = 'block';
             });
 
-            // Initialisation de Plyr
+            // Initialiser les contrôles de Plyr
             const playerControls = window.innerWidth >= 600 ? 
-                ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'pip', 'airplay', 'settings', 'fullscreen'] : 
-                ['play-large', 'play', 'progress', 'current-time', 'pip', 'airplay', 'settings', 'fullscreen'];
+                ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen'] : 
+                ['play-large', 'play', 'progress', 'current-time', 'settings', 'fullscreen'];
 
             const player = new Plyr('#player', {
                 controls: playerControls,
@@ -171,27 +315,27 @@
                 i18n: {
                     restart: 'Recommencer',
                     rewind: 'Revenir de {seektime}s',
-                    play: 'Jouer',
+                    play: 'Lecture',
                     pause: 'Pause',
-                    fastForward: 'Passer {seektime}s',
-                    seek: 'Rechercher',
+                    fastForward: 'Avancer de {seektime}s',
+                    seek: 'Chercher',
                     seekLabel: '{currentTime} de {duration}',
-                    played: 'Lancé',
-                    buffered: 'Buffered',
+                    played: 'Joué',
+                    buffered: 'En cache',
                     currentTime: 'Temps actuel',
                     duration: 'Durée',
                     volume: 'Volume',
-                    mute: 'Silence',
-                    unmute: 'Son activé',
+                    mute: 'Muet',
+                    unmute: 'Démuet',
                     enableCaptions: 'Activer les sous-titres',
                     disableCaptions: 'Désactiver les sous-titres',
                     download: 'Télécharger',
                     enterFullscreen: 'Plein écran',
-                    exitFullscreen: 'Sortir du plein écran',
+                    exitFullscreen: 'Quitter le plein écran',
                     frameTitle: 'Lecteur pour {title}',
                     captions: 'Sous-titres',
                     settings: 'Réglages',
-                    pip: 'Picture-In-Picture',
+                    pip: 'Picture-in-Picture',
                     menuBack: 'Retour au menu précédent',
                     speed: 'Vitesse',
                     normal: 'Normal',
@@ -203,29 +347,18 @@
                     reset: 'Réinitialiser',
                     disabled: 'Désactivé',
                     enabled: 'Activé',
+                    advertisement: 'Publicité',
                 },
             });
 
-            // Gestion des clics pour charger et lire la vidéo
-            videoElement.addEventListener('click', () => {
-                const playPromise = videoElement.play();
-                if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        console.log('Lecture automatique réussie');
-                    }).catch(error => {
-                        console.log('Lecture automatique empêchée', error);
-                    });
-                }
-            });
-
-            // Raccourcis clavier
+            // Gérer les raccourcis clavier pour Plyr
             document.addEventListener('keydown', (event) => {
                 switch (event.code) {
-                    case 'Space': // Barre d'espace pour jouer/pause
+                    case 'Space': 
                         event.preventDefault();
                         videoElement.paused ? videoElement.play() : videoElement.pause();
                         break;
-                    case 'KeyF': // 'F' pour plein écran
+                    case 'KeyF': 
                         if (videoElement.requestFullscreen) {
                             videoElement.requestFullscreen();
                         }
@@ -241,3 +374,4 @@
     </script>
 </body>
 </html>
+
